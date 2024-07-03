@@ -1,6 +1,8 @@
 package com.qx.domain.strategy.repository;
 
 import com.qx.domain.strategy.modle.entity.StrategyAwardEntity;
+import com.qx.domain.strategy.modle.entity.StrategyEntity;
+import com.qx.domain.strategy.modle.entity.StrategyRuleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -11,9 +13,16 @@ import java.util.Map;
 public interface IStrategyRepository {
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
-    void storeStrategyAwardSearchRateTable(Long strategyId, int size, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable);
+    void storeStrategyAwardSearchRateTable(String strategyId, int size,
+                                           Map<Integer, Integer> shuffleStrategyAwardSearchRateTable);
 
     int getRateRange(Long strategyId);
 
-    Integer getStrategyAwardAssemble(Long strategyId, int i);
+    int getRateRange(String key);
+
+    Integer getStrategyAwardAssemble(String strategyId, int i);
+
+    StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
+
+    StrategyRuleEntity queryStrategyRule(Long strategyId, String ruleModel);
 }

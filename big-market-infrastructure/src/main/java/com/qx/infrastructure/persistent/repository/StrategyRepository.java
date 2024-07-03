@@ -1,9 +1,15 @@
 package com.qx.infrastructure.persistent.repository;
 
 import com.qx.domain.strategy.modle.entity.StrategyAwardEntity;
+import com.qx.domain.strategy.modle.entity.StrategyEntity;
+import com.qx.domain.strategy.modle.entity.StrategyRuleEntity;
 import com.qx.domain.strategy.repository.IStrategyRepository;
 import com.qx.infrastructure.persistent.dao.IStrategyAwardDao;
+import com.qx.infrastructure.persistent.dao.IStrategyDao;
+import com.qx.infrastructure.persistent.dao.IStrategyRuleDao;
+import com.qx.infrastructure.persistent.po.Strategy;
 import com.qx.infrastructure.persistent.po.StrategyAward;
+import com.qx.infrastructure.persistent.po.StrategyRule;
 import com.qx.infrastructure.persistent.redis.IRedisService;
 import com.qx.types.common.Constants;
 import org.springframework.stereotype.Repository;
@@ -21,6 +27,12 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Resource
     private IStrategyAwardDao strategyAwardDao;
+
+    @Resource
+    private IStrategyDao strategyDao;
+
+    @Resource
+    private IStrategyRuleDao strategyRuleDao;
 
     @Resource
     private IRedisService redissonService;
@@ -51,7 +63,7 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public void storeStrategyAwardSearchRateTable(Long strategyId, int rateRange,
+    public void storeStrategyAwardSearchRateTable(String strategyId, int rateRange,
                                                   Map<Integer, Integer> strategyAwardSearchRateTable) {
         // 1. 存储抽奖策略范围值，如10000，用于生成1000以内的随机数
         redissonService.setValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + strategyId, rateRange);
@@ -61,14 +73,53 @@ public class StrategyRepository implements IStrategyRepository {
         cacheRateTable.putAll(strategyAwardSearchRateTable);
     }
 
+
     @Override
     public int getRateRange(Long strategyId) {
+        return getRateRange(String.valueOf(strategyId));
+    }
+
+    @Override
+    public int getRateRange(String strategyId) {
         return redissonService.getValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + strategyId);
 
     }
 
     @Override
-    public Integer getStrategyAwardAssemble(Long strategyId, int rateKey) {
+    public Integer getStrategyAwardAssemble(String strategyId, int rateKey) {
         return redissonService.getFromMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + strategyId, rateKey);
+    }
+
+    @Override
+    public StrategyEntity queryStrategyEntityByStrategyId(Long strategyId) {
+        String cacheKey = Constants.RedisKey.STRATEGY_KEY + strategyId;
+        StrategyEntity strategyEntity = redissonService.getValue(cacheKey);
+        if (null != strategyEntity) return strategyEntity;
+        Strategy strategy = strategyDao.queryStrategyByStrategyId(strategyId);
+        if (strategy == null) return null;
+        strategyEntity = StrategyEntity.builder()
+                .strategyId(strategy.getStrategyId())
+                .strategyDesc(strategy.getStrategyDesc())
+                .ruleModels(strategy.getRuleModels())
+                .build();
+        redissonService.setValue(cacheKey, strategyEntity);
+        return strategyEntity;
+    }
+
+    @Override
+    public StrategyRuleEntity queryStrategyRule(Long strategyId, String ruleModel) {
+        StrategyRule strategyRuleReq = new StrategyRule();
+        strategyRuleReq.setStrategyId(strategyId);
+        strategyRuleReq.setRuleModel(ruleModel);
+        StrategyRule strategyRule = strategyRuleDao.queryStrategyRule(strategyRuleReq);
+        if (strategyRule == null) return null;
+        return StrategyRuleEntity.builder()
+                .strategyId(strategyRule.getStrategyId())
+                .awardId(strategyRule.getAwardId())
+                .ruleType(strategyRule.getRuleType())
+                .ruleModel(strategyRule.getRuleModel())
+                .ruleValue(strategyRule.getRuleValue())
+                .ruleDesc(strategyRule.getRuleDesc())
+                .build();
     }
 }
