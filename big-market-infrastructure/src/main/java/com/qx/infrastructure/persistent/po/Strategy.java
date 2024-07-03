@@ -12,7 +12,7 @@ public class Strategy {
     /**
      * 抽奖策略ID
      */
-    private String strategyId;
+    private Long strategyId;
     /**
      * 抽奖策略描述
      */
