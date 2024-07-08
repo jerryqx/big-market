@@ -3,6 +3,7 @@ package com.qx.infrastructure.persistent.repository;
 import com.qx.domain.strategy.modle.entity.StrategyAwardEntity;
 import com.qx.domain.strategy.modle.entity.StrategyEntity;
 import com.qx.domain.strategy.modle.entity.StrategyRuleEntity;
+import com.qx.domain.strategy.modle.valobj.StrategyAwardRuleModelVO;
 import com.qx.domain.strategy.repository.IStrategyRepository;
 import com.qx.infrastructure.persistent.dao.IStrategyAwardDao;
 import com.qx.infrastructure.persistent.dao.IStrategyDao;
@@ -12,7 +13,6 @@ import com.qx.infrastructure.persistent.po.StrategyAward;
 import com.qx.infrastructure.persistent.po.StrategyRule;
 import com.qx.infrastructure.persistent.redis.IRedisService;
 import com.qx.types.common.Constants;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -74,7 +74,6 @@ public class StrategyRepository implements IStrategyRepository {
         cacheRateTable.putAll(strategyAwardSearchRateTable);
     }
 
-
     @Override
     public int getRateRange(Long strategyId) {
         return getRateRange(String.valueOf(strategyId));
@@ -131,6 +130,16 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRuleReq.setRuleModel(ruleModel);
         strategyRuleReq.setAwardId(awardId);
         return strategyRuleDao.queryStrategyRuleValue(strategyRuleReq);
+
+    }
+
+    @Override
+    public StrategyAwardRuleModelVO queryStrategyAwardRuleModelVO(Long strategyId, Integer awardId) {
+        StrategyAward strategyAwardReq = new StrategyAward();
+        strategyAwardReq.setStrategyId(strategyId);
+        strategyAwardReq.setAwardId(awardId);
+        String ruleModels = strategyAwardDao.queryStrategyAwardRuleModels(strategyAwardReq);
+        return StrategyAwardRuleModelVO.builder().ruleModels(ruleModels).build();
 
     }
 }
