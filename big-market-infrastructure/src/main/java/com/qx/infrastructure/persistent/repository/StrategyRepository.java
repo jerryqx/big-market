@@ -12,6 +12,7 @@ import com.qx.infrastructure.persistent.po.StrategyAward;
 import com.qx.infrastructure.persistent.po.StrategyRule;
 import com.qx.infrastructure.persistent.redis.IRedisService;
 import com.qx.types.common.Constants;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -121,5 +122,15 @@ public class StrategyRepository implements IStrategyRepository {
                 .ruleValue(strategyRule.getRuleValue())
                 .ruleDesc(strategyRule.getRuleDesc())
                 .build();
+    }
+
+    @Override
+    public String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel) {
+        StrategyRule strategyRuleReq = new StrategyRule();
+        strategyRuleReq.setStrategyId(strategyId);
+        strategyRuleReq.setRuleModel(ruleModel);
+        strategyRuleReq.setAwardId(awardId);
+        return strategyRuleDao.queryStrategyRuleValue(strategyRuleReq);
+
     }
 }
