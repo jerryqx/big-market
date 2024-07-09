@@ -1,12 +1,12 @@
-package com.qx.domain.strategy.service.rule.impl;
+package com.qx.domain.strategy.service.rule.filter.impl;
 
 import com.qx.domain.strategy.modle.entity.RuleActionEntity;
 import com.qx.domain.strategy.modle.entity.RuleMatterEntity;
 import com.qx.domain.strategy.modle.valobj.RuleLogicCheckTypeVO;
 import com.qx.domain.strategy.repository.IStrategyRepository;
 import com.qx.domain.strategy.service.annotation.LogicStrategy;
-import com.qx.domain.strategy.service.rule.ILogicFilter;
-import com.qx.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import com.qx.domain.strategy.service.rule.filter.ILogicFilter;
+import com.qx.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

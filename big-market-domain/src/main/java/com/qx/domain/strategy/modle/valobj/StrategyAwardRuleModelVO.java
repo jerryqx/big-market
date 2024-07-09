@@ -1,6 +1,6 @@
 package com.qx.domain.strategy.modle.valobj;
 
-import com.qx.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import com.qx.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.qx.types.common.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
