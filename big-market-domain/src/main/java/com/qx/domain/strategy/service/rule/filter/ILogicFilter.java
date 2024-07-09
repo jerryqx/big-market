@@ -1,4 +1,4 @@
-package com.qx.domain.strategy.service.rule;
+package com.qx.domain.strategy.service.rule.filter;
 
 import com.qx.domain.strategy.modle.entity.RuleActionEntity;
 import com.qx.domain.strategy.modle.entity.RuleMatterEntity;

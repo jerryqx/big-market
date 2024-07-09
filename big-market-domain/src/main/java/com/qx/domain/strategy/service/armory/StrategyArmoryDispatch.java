@@ -4,6 +4,7 @@ import com.qx.domain.strategy.modle.entity.StrategyAwardEntity;
 import com.qx.domain.strategy.modle.entity.StrategyEntity;
 import com.qx.domain.strategy.modle.entity.StrategyRuleEntity;
 import com.qx.domain.strategy.repository.IStrategyRepository;
+import com.qx.types.common.Constants;
 import com.qx.types.enums.ResponseCode;
 import com.qx.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -95,6 +96,7 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
                 shuffleStrategyAwardSearchRateTable);
     }
 
+
     @Override
     public Integer getRandomAwardId(Long strategyId) {
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
@@ -105,9 +107,14 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
 
     @Override
     public Integer getRandomAwardId(Long strategyId, String ruleWeightValue) {
-        String key = String.valueOf(strategyId).concat("_").concat(ruleWeightValue);
+        String key = String.valueOf(strategyId).concat(Constants.UNDERLINE).concat(ruleWeightValue);
+        return getRandomAwardId(key);
+    }
+
+    @Override
+    public Integer getRandomAwardId(String key) {
         // 分布式部署下，不一定为当前应用做的策略装配。也就是值不一定会保存到本应用，而是分布式应用，所以需要从 Redis 中获取。
-        int rateRange = repository.getRateRange(strategyId);
+        int rateRange = repository.getRateRange(key);
         // 通过生成的随机值，获取概率值奖品查找表的结果
         return repository.getStrategyAwardAssemble(key, new SecureRandom().nextInt(rateRange));
     }
