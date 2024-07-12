@@ -3,6 +3,7 @@ package com.qx.domain.strategy.repository;
 import com.qx.domain.strategy.modle.entity.StrategyAwardEntity;
 import com.qx.domain.strategy.modle.entity.StrategyEntity;
 import com.qx.domain.strategy.modle.entity.StrategyRuleEntity;
+import com.qx.domain.strategy.modle.valobj.RuleTreeVO;
 import com.qx.domain.strategy.modle.valobj.StrategyAwardRuleModelVO;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface IStrategyRepository {
     String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel);
 
     StrategyAwardRuleModelVO queryStrategyAwardRuleModelVO(Long strategyId, Integer awardId);
+
+    RuleTreeVO queryRuleTreeVOByTreeId(String treeLock);
 }
