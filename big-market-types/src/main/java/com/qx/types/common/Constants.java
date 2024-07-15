@@ -18,6 +18,10 @@ public class Constants {
 
         public static String RULE_TREE_VO_KEY = "rule_tree_vo_key_";
 
+        public static String STRATEGY_AWARD_COUNT_KEY = "strategy_award_count_key_";
+
+        public static String STRATEGY_AWARD_COUNT_QUERY_KEY = "strategy_award_count_query_key";
+
     }
 
 }
