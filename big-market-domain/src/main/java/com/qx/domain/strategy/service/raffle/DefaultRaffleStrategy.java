@@ -2,6 +2,7 @@ package com.qx.domain.strategy.service.raffle;
 
 import com.qx.domain.strategy.modle.valobj.RuleTreeVO;
 import com.qx.domain.strategy.modle.valobj.StrategyAwardRuleModelVO;
+import com.qx.domain.strategy.modle.valobj.StrategyAwardStockKeyVO;
 import com.qx.domain.strategy.repository.IStrategyRepository;
 import com.qx.domain.strategy.service.AbstractRaffleStrategy;
 import com.qx.domain.strategy.service.armory.IStrategyDispatch;
@@ -127,7 +128,19 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
             throw new RuntimeException(
                     "存在抽奖策略配置的规则模型 Key，未在库表 rule_tree、rule_tree_node、rule_tree_line 配置对应的规则树信息 " +
                             strategyAwardRuleModelVO.getRuleModels());
-        } IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
+        }
+        IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
         return treeEngine.process(userId, strategyId, awardId);
+    }
+
+    @Override
+    public StrategyAwardStockKeyVO takeQueueValue() throws InterruptedException {
+        return repository.takeQueueValue();
+    }
+
+    @Override
+    public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
+        repository.updateStrategyAwardStock(strategyId, awardId);
+
     }
 }
